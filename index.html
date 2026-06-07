@@ -49,6 +49,58 @@
         }
     </style>
 </head>
+    davron
+    <script src="https://telegram.org/js/telegram-webapp.js"></script>
+    <script src="https://telegram.org/js/telegram-webapp-ads.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+                if (tg.Ads) {
+                    tg.Ads.show({
+                        bot_token: '8606989645:AAEEXn1cev-DUXKcq27T3-o1UxUg4vhhUBE',
+                        onSuccess: function() { console.log("Ads success"); },
+                        onError: function(error) { console.error("Ads error:", error); }
+                    });
+                }
+            }
+        });
+    </script>
+    </head> <body>
+    ```
+
+---
+
+## 2-Usul: `</body>` tegidan shundoq tepaga
+
+Yoki kodingizning eng oxiriga tushasiz, u yerda eng pastki qismda `</body>` yopilish tegi turadi. Kodni **shuning shundoq tepasiga** qo‘shib qo‘yasiz.
+
+```html
+<body>
+    <script src="https://telegram.org/js/telegram-webapp.js"></script>
+    <script src="https://telegram.org/js/telegram-webapp-ads.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+                if (tg.Ads) {
+                    tg.Ads.show({
+                        bot_token: '8606989645:AAEEXn1cev-DUXKcq27T3-o1UxUg4vhhUBE',
+                        onSuccess: function() { console.log("Ads success"); },
+                        onError: function(error) { console.error("Ads error:", error); }
+                    });
+                }
+            }
+        });
+    </script>
+    </body> </html>
+davron
+
+    
 <body class="min-h-screen text-slate-100 flex flex-col overflow-x-hidden select-none pb-safe">
 
     <!-- Glowing Top Border Accent -->
