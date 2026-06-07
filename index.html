@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>UzTV Player & Live Streaming</title>
+    <!-- Tailwind CSS for modern styled system -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Custom Setup for Cinematic dark styles -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cosmic: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            800: '#141218',
+                            900: '#0f0d13',
+                            950: '#070509',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Hls.js Media Stream Engine for robust m3u8 playback and recovery -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <style>
+        /* Hide scrollbars but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            background-color: #070509;
+            color: #E6E1E5;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        /* Custom video container glow */
+        .video-glow {
+            box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col overflow-x-hidden select-none pb-safe">
+
+    <!-- Glowing Top Border Accent -->
+    <div class="h-1 w-full bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600"></div>
+
+    <!-- MAIN HEADER -->
+    <header class="bg-cosmic-900 border-b border-purple-950/40 px-4 md:px-8 py-3 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+            <!-- Brand & Pulse -->
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-gradient-to-tr from-purple-800 to-indigo-700 rounded-xl shadow-lg ring-1 ring-purple-500/30">
+                    <!-- TV SVG Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-violet-400 via-fuchsia-300 to-indigo-300 bg-clip-text text-transparent">UzTV Player</h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">On-line Efir</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Search & Stats -->
+            <div class="w-full md:w-96 relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="text" id="search-input" placeholder="Kanal nomini izlang..." 
+                    class="w-full pl-10 pr-4 py-2 border-0 bg-cosmic-950/80 rounded-2xl text-slate-100 placeholder-slate-500 ring-1 ring-purple-950/50 focus:ring-2 focus:ring-violet-600 transition-all text-sm outline-none shadow-inner"
+                    oninput="handleSearch()">
+                <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 hidden" onclick="clearSearch()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT GRID -->
+    <main class="w-full max-w-7xl mx-auto px-2 md:px-6 py-4 flex flex-col gap-6 flex-1">
+        
+        <!-- ROW 1: PREMIER PLAYER CONTAINER (GLOWING CARDS) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Dynamic Video Player Section -->
+            <div class="lg:col-span-7 flex flex-col gap-3">
+                <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-black border border-purple-950/30 video-glow flex items-center justify-center group">
+                    <video id="video-player" playsinline autoplay class="w-full h-full object-fit" style="max-height: 520px;"></video>
+                    
+                    <!-- Floating Overlay Controls (Loading, Play/Pause, Status details) -->
+                    <div id="player-loader" class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 transition-opacity">
+                        <div class="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-sm font-medium tracking-wide text-violet-300">Tasvir yuklanmoqda...</p>
+                    </div>
+
+                    <!-- Video Controls Overlay on Hover -->
+                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <button onclick="togglePlay()" class="p-2 bg-violet-600 hover:bg-violet-500 rounded-full text-white shadow transition-all">
+                                <svg id="control-play-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <button id="control-mute" onclick="toggleMute()" class="p-1.5 bg-cosmic-950 hover:bg-slate-800 rounded-lg text-slate-300 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="player-badge" class="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded uppercase tracking-wider animate-pulse">LIVESTREAM</span>
+                            <button onclick="toggleFullScreen()" class="p-1.5 bg-cosmic-950 hover:bg-slate-800 rounded-lg text-slate-300 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Channel Info Bar -->
+                <div class="bg-cosmic-900 border border-purple-950/20 p-4 rounded-2xl flex flex-col gap-2">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h2 id="active-title" class="text-lg font-bold text-slate-100">Kanal tanlanmagan</h2>
+                                <span id="active-country-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-900/40 text-purple-300">UZB</span>
+                            </div>
+                            <p id="active-status" class="text-xs text-slate-400 mt-1">Ijro etiluvchi oqim: <span id="active-url" class="font-mono text-purple-400 break-all">Kutilmoqda...</span></p>
+                        </div>
+                        <button id="active-fav-btn" onclick="toggleActiveChannelFav()" class="p-2.5 bg-cosmic-950 hover:bg-rose-950/40 rounded-xl group transition-all text-rose-500">
+                            <!-- Heart SVG icon filled/outlined dynamically -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 stroke-rose-500 fill-none transition-transform group-hover:scale-110 duration-200" id="active-heart-icon" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Connection/Recovery Warning Notification Banner inside player panel -->
+                    <div id="player-alert" class="hidden mt-2 p-3 bg-amber-950/30 border border-amber-950 rounded-xl flex items-center gap-2.5 text-amber-300 text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5.5 h-5.5 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <span class="font-bold">Eslatma:</span> <span id="alert-text">Ushbu oqimda tasvir uzildi. Hls-Media-Engine avtomatik ravishda qayta tiklamoqda.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category & Country Tabs Filter Column -->
+            <div class="lg:col-span-5 flex flex-col gap-4">
+                <div class="bg-cosmic-900 border border-purple-950/20 p-4 rounded-3xl flex flex-col gap-4 flex-1">
+                    <!-- Heading of filter navigation -->
+                    <div class="flex items-center justify-between border-b border-purple-950/30 pb-3">
+                        <h3 class="text-md font-bold text-slate-200 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            Davlatlar va Bo'limlar
+                        </h3>
+                        <span id="filtered-channels-count" class="px-2 py-0.5 bg-violet-950/80 ring-1 ring-violet-500/30 text-violet-300 text-[11px] font-bold rounded-lg leading-normal">0 ta</span>
+                    </div>
+
+                    <!-- Navigation Category Tabs Pills -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterGroup('all')" id="tab-all" class="category-btn active px-4 py-2 text-xs font-bold rounded-xl border border-transparent transition-all shadow focus:outline-none focus:ring-2 focus:ring-violet-600">
+                            🌍 Hammasi
+                        </button>
+                        <button onclick="filterGroup('O\'zbekiston')" id="tab-uz" class="category-btn px-4 py-2 text-xs font-bold rounded-xl border border-transparent transition-all shadow focus:outline-none focus:ring-2 focus:ring-violet-600">
+                            🇺🇿 O'zbekiston
+                        </button>
+                        <button onclick="filterGroup('Tojikiston')" id="tab-tj" class="category-btn px-4 py-2 text-xs font-bold rounded-xl border border-transparent transition-all shadow focus:outline-none focus:ring-2 focus:ring-violet-600">
+                            🇹🇯 Tojikiston
+                        </button>
+                        <button onclick="filterGroup('Rossiya')" id="tab-ru" class="category-btn px-4 py-2 text-xs font-bold rounded-xl border border-transparent transition-all shadow focus:outline-none focus:ring-2 focus:ring-violet-600">
+                            🇷🇺 Rossiya
+                        </button>
+                        <button onclick="filterGroup('favorites')" id="tab-fav" class="category-btn px-4 py-2 text-xs font-bold rounded-xl border border-transparent transition-all shadow focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            ⭐️ Sevimlilar
+                        </button>
+                    </div>
+
+                    <!-- Selected Country Info banner -->
+                    <div class="bg-cosmic-950/80 p-3 rounded-2xl flex items-center justify-between text-xs ring-1 ring-purple-950/40">
+                        <span class="text-slate-400">Tezkor Hls.js oqim boshqaruvi:</span>
+                        <span class="text-violet-400 font-bold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                            Auto Buffer Recovery
+                        </span>
+                    </div>
+
+                    <!-- Channel list scroll container -->
+                    <div id="channels-container" class="space-y-2.5 overflow-y-auto pr-1 no-scrollbar flex-1" style="max-height: 400px;">
+                        <!-- Dynamic list of channels will fall here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BEAUTIFUL DETAILS SECTION -->
+        <footer class="mt-auto py-6 border-t border-purple-950/30 text-center text-xs text-slate-500 flex flex-col gap-2">
+            <p>Hls-Media-Engine © 2026. Avtomatik oqim tiklash va buffer tahlil tizimi bilan hisoblangan.</p>
+            <p>Sevimli kanallar "Yurak" tugmasi orqali mahalliy xotiraga (localStorage) doimiy saqlanadi.</p>
+        </footer>
+    </main>
+
+    <!-- Tailwind Style overrides dynamically injected for interactive transitions -->
+    <style>
+        .category-btn {
+            background-color: #141218;
+            color: #CAC4D0;
+            border-color: rgba(139, 92, 246, 0.1);
+        }
+        .category-btn.active {
+            background-color: #8b5cf6;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+
+    <!-- MAIN JAVASCRIPT PLAYER LOGIC ENGINE -->
+    <script>
+        // MASTER CHANNELS COLLECTION PARSED AND CLASSIFIED FROM PLAYLIST DATA
+        const channelsData = [
+            // O'zbekiston / Uzbekistan Channels
+            { id: "uz_biz_cinema", name: "BIZ Cinema (1080p)", group: "O'zbekiston", url: "https://fl.biztv.media/cinema_720_EMfSyXgoRdiIHgldXTZICucKTIeCKO/index.m3u8", logoChar: "🎬" },
+            { id: "uz_biz_music", name: "BIZ Music (1080p)", group: "O'zbekiston", url: "https://fl.biztv.media/music_720_QAKpGmVUjaPApCNjpsgBxrdqNihAkl/index.m3u8", logoChar: "🎵" },
+            { id: "uz_biz_tv", name: "BIZ TV (1080p)", group: "O'zbekiston", url: "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/index.m3u8", logoChar: "📺" },
+            { id: "uz_bolajon", name: "Bolajon (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1007/playlist.m3u8", logoChar: "👶" },
+            { id: "uz_dasturxon_tv", name: "Dasturxon TV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1206/tracks-v1a1/playlist.m3u8", logoChar: "🍽️" },
+            { id: "uz_dunyo_boylab", name: "Dunyo bo'ylab (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1006/tracks-v1a1/playlist.m3u8", logoChar: "🌍" },
+            { id: "uz_ftv", name: "FTV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1018/playlist.m3u8", logoChar: "🎸" },
+            { id: "uz_kinoteatr", name: "Kinoteatr (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1009/tracks-v1a1/playlist.m3u8", logoChar: "🎥" },
+            { id: "uz_madaniyat_va_marifat", name: "Madaniyat va ma'rifat (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1005/tracks-v1a1/playlist.m3u8", logoChar: "📚" },
+            { id: "uz_mahalla", name: "Mahalla (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1013/tracks-v1a1/playlist.m3u8", logoChar: "🏡" },
+            { id: "uz_milliy_1080p", name: "Milliy (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1014/tracks-v1a1/playlist.m3u8", logoChar: "🔱" },
+            { id: "uz_milliy_480p", name: "Milliy (480p)", group: "O'zbekiston", url: "http://milliy.tv/hls/index.m3u8", logoChar: "📺" },
+            { id: "uz_my5_hd", name: "MY5 (1080p)", group: "O'zbekiston", url: "https://st.my5.media/hls/hd/index.m3u8", logoChar: "🖐️" },
+            { id: "uz_my5_576p", name: "MY5 (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1217/tracks-v1a1/playlist.m3u8", logoChar: "🖐️" },
+            { id: "uz_navo", name: "Navo (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1008/tracks-v1a1/playlist.m3u8", logoChar: "🎻" },
+            { id: "uz_ozbekiston", name: "O'zbekiston (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1001/tracks-v1a1/playlist.m3u8", logoChar: "🇺🇿" },
+            { id: "uz_ozbekiston_24", name: "O'zbekiston 24 (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1011/tracks-v1a1/playlist.m3u8", logoChar: "🕒" },
+            { id: "uz_ozbekiston_tarixi", name: "O'zbekiston Tarixi (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1209/tracks-v1a1/playlist.m3u8", logoChar: "📜" },
+            { id: "uz_qaraqalpaqstan", name: "Qaraqalpaqstan (720p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1467/playlist.m3u8", logoChar: "🏜️" },
+            { id: "uz_renessans_tv", name: "Renessans TV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1221/tracks-v1a1/playlist.m3u8", logoChar: "🏛️" },
+            { id: "uz_sevimli_tv", name: "Sevimli TV (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1017/tracks-v1a1/playlist.m3u8", logoChar: "💖" },
+            { id: "uz_toshkent", name: "Toshkent (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1003/tracks-v1a1/playlist.m3u8", logoChar: "🏙️" },
+            { id: "uz_uzreport_tv", name: "UzReport TV (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1015/tracks-v1a1/playlist.m3u8", logoChar: "📊" },
+            { id: "uz_yoshlar", name: "Yoshlar (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1002/tracks-v1a1/playlist.m3u8", logoChar: "✨" },
+            { id: "uz_zor_tv", name: "Zo'r TV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1016/tracks-v1a1/mono.m3u8", logoChar: "👍" },
+            { id: "uz_makon_tv", name: "Makon TV (576i)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1497/tracks-v1a1/mono.m3u8", logoChar: "🛰️" },
+            { id: "uz_navoiy_tv", name: "Navoiy MTRK (576i)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1460/tracks-v1a1/mono.m3u8", logoChar: "🏞️" },
+            { id: "uz_buxoro_tv", name: "Buxoro MTRK (720p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1459/tracks-v1a1/mono.m3u8", logoChar: "🕌" },
+            { id: "uz_fargona_tv", name: "Farg'ona MTRK", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1458/tracks-v1a1/mono.m3u8", logoChar: "🏔️" },
+            { id: "uz_andijon_tv", name: "Andijon MTRK (576i)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1457/tracks-v1a1/mono.m3u8", logoChar: "🏙️" },
+
+            // Tojikiston / Tajikistan Channels
+            { id: "tj_badakhshon", name: "Badakhshon (576p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/11/3m.m3u8", logoChar: "🏔️" },
+            { id: "tj_dushanbe_hd", name: "Dushanbe HD (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/7/3m.m3u8", logoChar: "🏙️" },
+            { id: "tj_futbol", name: "Futbol (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/8/3m.m3u8", logoChar: "⚽" },
+            { id: "tj_ilm_va_tabiat", name: "Ilm va Tabiat (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/15/3m.m3u8", logoChar: "🔬" },
+            { id: "tj_jahonnamo", name: "Jahonnamo (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/4/3m.m3u8", logoChar: "📰" },
+            { id: "tj_khatlon", name: "Khatlon (576p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/10/3m.m3u8", logoChar: "🏜️" },
+            { id: "tj_tajikistan", name: "Tajikistan (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/1/3m.m3u8", logoChar: "🇹🇯" },
+            { id: "tj_tmt", name: "TMT (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/9/3m.m3u8", logoChar: "⚡" },
+            { id: "tj_tv_bahoriston", name: "TV Bahoriston (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/3/3m.m3u8", logoChar: "🌸" },
+            { id: "tj_tv_kulob", name: "TV Kulob (576p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/12/3m.m3u8", logoChar: "🏛️" },
+            { id: "tj_tv_safina", name: "TV Safina (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/2/3m.m3u8", logoChar: "🛡️" },
+            { id: "tj_tv_sayohi", name: "TV Sayohi (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/16/3m.m3u8", logoChar: "🎒" },
+            { id: "tj_tv_sinamo", name: "TV Sinamo (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/6/3m.m3u8", logoChar: "🎥" },
+            { id: "tj_tv_sugd", name: "TV Sugd (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/14/3m.m3u8", logoChar: "🌾" },
+
+            // Rossiya / Russia Channels
+            { id: "ru_15_music", name: "15+ Music (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/ce3366b1-bf25-4e24-96bb-1adf0d44bd3d.m3u8", logoChar: "🎸" },
+            { id: "ru_alpha_cinema", name: "alpha Cinema (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/b389173a-df4e-4171-8904-e249893e71eb.m3u8", logoChar: "🎬" },
+            { id: "ru_alpha_funny", name: "alpha Funny (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/90b76c71-a86e-488a-aac4-cb66d6f88781.m3u8", logoChar: "😷" },
+            { id: "ru_alpha_moretime", name: "alpha Moretime (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/3546fc09-2eba-459d-9a1f-9a2fc39e50bd.m3u8", logoChar: "⏰" },
+            { id: "ru_nsc_plus", name: "NSC+ (720p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/5a03fc7a-8417-4874-b56f-91b8aeba1210.m3u8", logoChar: "🛰️" },
+            { id: "ru_novyi_russkii", name: "Новый Русский (720p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/f983b507-a170-41a9-85a9-d9afc6cba9c1.m3u8", logoChar: "🇷🇺" },
+            { id: "ru_12_kanal", name: "12 Канал (1080p)", group: "Rossiya", url: "https://12channel.bonus-tv.ru/cdn/12channel/playlist.m3u8", logoChar: "📺" },
+            { id: "ru_arirang", name: "Arirang (576p)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/arirang_edge/playlist.m3u8", logoChar: "🌸" },
+            { id: "ru_fon_music", name: "FON Music (1080p)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/tntmusic/playlist.m3u8", logoChar: "🎵" },
+            { id: "ru_leomax_24", name: "Leomax 24 (1080p)", group: "Rossiya", url: "https://tvshops.bonus-tv.ru/cdn/shop24/playlist.m3u8", logoChar: "🛍️" },
+            { id: "ru_rt_doc", name: "RTД (Документальный)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/rtdoc/playlist.m3u8", logoChar: "🎥" },
+            { id: "ru_arkhyz_24", name: "Архыз 24 (1080p)", group: "Rossiya", url: "https://live.mediacdn.ru/sr1/arhis24/playlist.m3u8", logoChar: "⛰️" },
+            { id: "ru_belros", name: "БелРос (576p)", group: "Rossiya", url: "https://live2.mediacdn.ru/sr1/tro/playlist.m3u8", logoChar: "📡" },
+            { id: "ru_bst", name: "БСТ (Башкортостан)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/bst/playlist.m3u8", logoChar: "🏛" },
+            { id: "ru_dagestan", name: "Дагестан (1080p)", group: "Rossiya", url: "https://dagestan.mediacdn.ru/cdn/dagestan/playlist.m3u8", logoChar: "🌄" },
+            { id: "ru_don_24", name: "Дон 24 (1080p)", group: "Rossiya", url: "https://donmedia.bonus-tv.ru/cdn/donmedia/playlist.m3u8", logoChar: "🌊" },
+            { id: "ru_zvezda", name: "Звезда (1080p)", group: "Rossiya", url: "https://tvzvezda.bonus-tv.ru/cdn/tvzvezda/playlist.m3u8", logoChar: "⭐️" },
+            { id: "ru_zvezda_plus", name: "Звезда Плюс (1080p)", group: "Rossiya", url: "http://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/playlist.m3u8", logoChar: "✨" },
+            { id: "ru_ingushetia", name: "Ингушетия ТВ (1080p)", group: "Rossiya", url: "https://ingushetia.mediacdn.ru/cdn/ingushetia/playlist.m3u8", logoChar: "🏰" },
+            { id: "ru_krik_tv", name: "КРИК-ТВ (Екатеринбург)", group: "Rossiya", url: "http://cdn-01.bonus-tv.ru/kriktv_edge/playlist.m3u8", logoChar: "💬" },
+            { id: "ru_kuraj_tv", name: "Курай (Уфа) (576p)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/kurai/playlist.m3u8", logoChar: "🎼" },
+            { id: "ru_magnat_tv", name: "Магнат ТВ (1080p)", group: "Rossiya", url: "https://s1.tv-nano.com/Magnat_HD_5119705/video.m3u8", logoChar: "🪙" },
+            { id: "ru_osetiya", name: "Осетия Ирыстон (1080p)", group: "Rossiya", url: "https://osir.mediacdn.ru/cdn/osetia/playlist.m3u8", logoChar: "🗻" },
+            { id: "ru_yaroslavl", name: "Первый Ярославский", group: "Rossiya", url: "https://yaroslavl.mediacdn.ru/cdn/pervyaroslavsk/playlist.m3u8", logoChar: "🏙️" },
+            { id: "ru_prodvizhenie", name: "Продвижение (576p)", group: "Rossiya", url: "https://prodvizhenie.bonus-tv.ru/cdn/prodvizhenie/playlist.m3u8", logoChar: "📈" },
+            { id: "ru_radost_moya", name: "Радость моя (576p)", group: "Rossiya", url: "https://radm.mediacdn.ru/cdn/radost/playlist.m3u8", logoChar: "☀️" },
+            { id: "ru_salyam", name: "Салям (Уфа) (576p)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/salyam/playlist.m3u8", logoChar: "🤝" },
+            { id: "ru_svoyo_tv", name: "Своё ТВ (Ставрополь)", group: "Rossiya", url: "https://svoetv.mediacdn.ru/cdn/svoetv/playlist.m3u8", logoChar: "📺" },
+            { id: "ru_start_triumf", name: "СТАРТ Триумф", group: "Rossiya", url: "https://bl.webcaster.pro/media/playlist/free_fe8dc1b768a84b8b0333db826471f17e_hd/33_85479982/1080p/8666c3e935faf6ef47ffd601e8e48868/4821408969.m3u8", logoChar: "🏆" },
+            { id: "ru_strana_fm", name: "Страна ФМ", group: "Rossiya", url: "https://live-stranafm.cdnvideo.ru/stranafm/smil:stranafm.smil/playlist.m3u8", logoChar: "📻" },
+            { id: "ru_tamyr", name: "Тамыр (Уфа) (576p)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/tamyr/playlist.m3u8", logoChar: "🧸" },
+            { id: "ru_krasnodar", name: "Телеканал Краснодар", group: "Rossiya", url: "https://krasnodar.mediacdn.ru/live/cdn/krasnodar/playlist.m3u8", logoChar: "🍏" },
+            { id: "ru_tnv_planet", name: "ТНВ-Планета (Казань)", group: "Rossiya", url: "https://planeta.mediacdn.ru/cdn/tnvplanet/playlist.m3u8", logoChar: "🌍" },
+            { id: "ru_shanson_tv", name: "Шансон ТВ", group: "Rossiya", url: "https://hls-shansontv.cdnvideo.ru/shansontv/smil:shansontv.smil/playlist.m3u8", logoChar: "🎸" },
+            { id: "ru_shayan_tv", name: "Шаян ТВ (Татарстан)", group: "Rossiya", url: "https://shayan.bonus-tv.ru/cdn/shayan/playlist.m3u8", logoChar: "👦" },
+            { id: "ru_u_tv", name: "Ю (720p)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/u/playlist.m3u8", logoChar: "👜" },
+            { id: "ru_360_evacoder", name: "360° (1080p) HQ", group: "Rossiya", url: "https://cdn-evacoder-tv.facecast.io/evacoder_hls_hi/CkxfR1xNUAJwTgtXTBZTAJli/index.m3u8", logoChar: "📡" },
+            { id: "ru_365_cinema", name: "Cinema Russia", group: "Rossiya", url: "http://catchup.videoline.ru/cinema/playlist.m3u8", logoChar: "🎥" },
+            { id: "ru_dancehits80_denvs", name: "DanceHits80", group: "Rossiya", url: "http://dancehits80.denvs.ru:8080/index.m3u8", logoChar: "🕺" },
+            { id: "ru_dtr_music", name: "DTR Music 1 (720p)", group: "Rossiya", url: "https://kino-stream.online/hls/DTRMUSIC1.m3u8", logoChar: "🎧" },
+            { id: "ru_dtr_zona1", name: "DTR Zona 1", group: "Rossiya", url: "https://kino-stream.online/hls/DTRZONA1.m3u8", logoChar: "🍿" },
+            { id: "ru_dtr_zona2", name: "DTR Zona 2", group: "Rossiya", url: "https://kino-stream.online/hls/DTRZONA2.m3u8", logoChar: "🏰" },
+            { id: "ru_kino_24", name: "Kino 24 HD", group: "Rossiya", url: "http://sirius.greenhosting.ru/Kino24Ru/video.m3u8", logoChar: "🎞️" },
+            { id: "ru_pro100_tv", name: "Pro100TV", group: "Rossiya", url: "https://sirius.greenhosting.ru/Pro100tvRu/video.m3u8", logoChar: "⚡" },
+            { id: "ru_sochi_live", name: "Sochi Live HD", group: "Rossiya", url: "http://serv30.vintera.tv:8081/sochi/sochi_stream/playlist.m3u8", logoChar: "🌴" },
+            { id: "ru_song_tv", name: "SONGTV Russia", group: "Rossiya", url: "https://songtv.hls.iptvdc.com/web-russia/playlist.m3u8", logoChar: "🎶" },
+            { id: "ru_tsargrad", name: "Tsargrad TV (1080p)", group: "Rossiya", url: "https://bl.rutube.ru/livestream/91815da4edb167b5bd617bae490e57da/index.m3u8?e=2070278263&s=is_mLq_kjPYLsOJ4qj85tw&scheme=https", logoChar: "⛪" },
+            { id: "ru_tv_pro_ch", name: "TV PRO Direct", group: "Rossiya", url: "http://rtmp.tvpro-online.ru/hls/ch1.m3u8", logoChar: "📽" },
+            { id: "ru_univer_tv_1080", name: "Univer TV HD", group: "Rossiya", url: "https://cdn.universmotri.ru/live/smil:univer.smil/playlist.m3u8", logoChar: "🎓" },
+            { id: "ru_viva_ru", name: "VIVA Russia (1080p)", group: "Rossiya", url: "https://live20.bozztv.com/akamaissh101/ssh101/vivarussia/chunks.m3u8", logoChar: "🌟" },
+            { id: "ru_aist_tv_direct", name: "Аист ТВ (1080p)", group: "Rossiya", url: "http://live2-aisttv.cdnvideo.ru/aisttv2/aisttv.sdp/playlist.m3u8", logoChar: "🦩" },
+            { id: "ru_astrahan_24_ch", name: "Астрахань 24", group: "Rossiya", url: "https://streaming.astrakhan.ru/astrakhan24/playlist.m3u8", logoChar: "🍉" },
+            { id: "ru_belgorod_24_ch", name: "Белгород 24", group: "Rossiya", url: "https://belnovosti.cdn.easyhoster.ru:8443/stream.m3u8", logoChar: "🏢" },
+            { id: "ru_big_asia_live", name: "Большая Азия", group: "Rossiya", url: "http://live-bigasia.cdnvideo.ru/bigasia/bigasia.smil/playlist.m3u8", logoChar: "🌏" },
+            { id: "ru_vera_24_live", name: "Вера 24", group: "Rossiya", url: "https://5f05e059699ae.streamlock.net/WEB_Vera24/ngrp:Vera24.stream-adaptive/playlist.m3u8", logoChar: "🕊️" },
+            { id: "ru_volga_hd_live", name: "Волга HD", group: "Rossiya", url: "http://tele2dvrnat01-02.cdnvideo.ru/stream/NAT_Volga/hls/1920x1080@4504/playlist.m3u8", logoChar: "⛵" },
+            { id: "ru_volgograd_24_hd", name: "Волгоград 24 (1080p)", group: "Rossiya", url: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8", logoChar: "🗽" },
+            { id: "ru_gubernia_samara_hd", name: "Губерния (Самара)", group: "Rossiya", url: "http://live.guberniatv.cdnvideo.ru/guberniatv/guberniatv.sdp/playlist.m3u8", logoChar: "🌾" },
+            { id: "ru_eurasia_live", name: "Евразия (Орск)", group: "Rossiya", url: "https://infochh.trkeurasia.ru/hlsinfoch/infochhd.m3u8", logoChar: "🚂" },
+            { id: "ru_enisey_live", name: "Енисей (1080p)", group: "Rossiya", url: "https://hls-eniseytv.cdnvideo.ru/eniseytv/stream1/playlist.m3u8", logoChar: "🌲" },
+            { id: "ru_izvestia_live", name: "Известия (1080p)", group: "Rossiya", url: "http://igi-hls.cdnvideo.ru/igi/igi_tcode/playlist.m3u8", logoChar: "📰" },
+            { id: "ru_kino_tv_direct", name: "КИНОТВ Live", group: "Rossiya", url: "https://vod.tuva.ru/kinotv/index.m3u8", logoChar: "🍿" },
+            { id: "ru_crimea_24_live", name: "Крым 24", group: "Rossiya", url: "https://cdn.1tvcrimea.ru/24tvcrimea.m3u8", logoChar: "🏖️" },
+            { id: "ru_ldpr_tv_live", name: "ЛДПР ТВ", group: "Rossiya", url: "http://46.46.143.222:1935/live/mp4:ldpr.stream/playlist.m3u8", logoChar: "🕊️" },
+            { id: "ru_legendarnyy_ch", name: "Легендарный 24", group: "Rossiya", url: "https://sevas.1tvcrimea.ru/legendarniy24.m3u8", logoChar: "⚔️" },
+            { id: "ru_mir_1080", name: "Мир (1080p)", group: "Rossiya", url: "http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mirtv_2500/playlist.m3u8", logoChar: "🌍" },
+            { id: "ru_mir_24_1080", name: "Мир 24 (1080p)", group: "Rossiya", url: "http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/playlist.m3u8", logoChar: "🌏" },
+            { id: "ru_solnce_direct", name: "Солнце (576p)", group: "Rossiya", url: "http://tv.mediacdn.ru/live/solntse/playlist.m3u8", logoChar: "☀️" },
+            { id: "ru_tvcentr_live", name: "ТВ Центр HD", group: "Rossiya", url: "https://tvc-hls.cdnvideo.ru/tvc-res/smil:vd9221.smil/playlist.m3u8", logoChar: "🏛️" },
+            { id: "ru_tvoetv_hd_live", name: "Твое TV HD", group: "Rossiya", url: "http://tvoetv.space:8080/tvoetv/index.m3u8", logoChar: "🌟" },
+            { id: "ru_rbk_live", name: "РБК ТВ", group: "Rossiya", url: "http://online-video.rbc.ru/online2/rbctv.m3u8", logoChar: "📊" },
+            { id: "ru_russia_24", name: "Россия 24", group: "Rossiya", url: "https://uiptv.do.am/1ufc/000000006/playlist.m3u8", logoChar: "📺" },
+            { id: "ru_tiji_direct", name: "TiJi Kids", group: "Rossiya", url: "https://stream8.cinerama.uz/1441/tracks-v1a1/mono.m3u8", logoChar: "🧸" },
+            { id: "ru_gulli_girl", name: "Gulli Girl HD", group: "Rossiya", url: "https://stream8.cinerama.uz/1445/tracks-v1a1/mono.m3u8", logoChar: "🎀" },
+            { id: "ru_ntv_hd_live", name: "NTV HD (1080p)", group: "Rossiya", url: "https://bl.rutube.ru/livestream/c37cd74192c6bc3d6cd6077c0c4fd686/index.m3u8?s=HSWg81JrQ3OqmwuWkEIDAQ&e=2077050299&scheme=https", logoChar: "🖲️" },
+            { id: "ru_subbota_hd", name: "Subbota! HD", group: "Rossiya", url: "https://bl.rutube.ru/livestream/310744c10a5809da38aa445c952976da/index.m3u8?s=dmUf6BUQzDBTwtQOseAfog&e=2066519758&scheme=https", logoChar: "🎀" },
+            { id: "ru_u_tv_720", name: "U! TV 720p", group: "Rossiya", url: "https://bl.rutube.ru/livestream/5c9327074e25ca86f3111d4085cbbb65/index.m3u8?s=9cPc1rCGu6M932eqrifRhQ&e=2066519758&scheme=https", logoChar: "👚" },
+            { id: "ru_ru_tv", name: "RU.TV (1080p)", group: "Rossiya", url: "https://bl.rutube.ru/livestream/b1eb8e90d7e636677b3eb73b4fcbb717/index.m3u8?s=d-E-bxKy2v3EEJ94RQX9CA&e=2069285076&scheme=https", logoChar: "💖" },
+            { id: "ru_rtvi_live", name: "RTVi (450p)", group: "Rossiya", url: "https://s70378.cdn.ngenix.net/rtvi/index.m3u8", logoChar: "🎙️" }
+        ];
+
+        // GLOBAL CONFIG & STATES
+        let currentGroup = "all";
+        let currentSearchQuery = "";
+        let favorites = JSON.parse(localStorage.getItem('uztv_favorites') || '[]');
+        let activeChannel = null;
+        let hls = null;
+        let currentUrl = "";
+
+        const videoElement = document.getElementById('video-player');
+        const loader = document.getElementById('player-loader');
+        const alertBanner = document.getElementById('player-alert');
+        const alertText = document.getElementById('alert-text');
+
+        // INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            // Register Hls.js error hooks & native player handlers
+            setupVideoListeners();
+
+            // Load the first channel by default
+            if (channelsData.length > 0) {
+                playChannel(channelsData[0].id);
+            }
+
+            // Render view lists initial
+            renderChannels();
+        });
+
+        // VIDEO PLAYER LOGIC (ADVANCED HLS AUTO RECOVERY)
+        function setupVideoListeners() {
+            videoElement.addEventListener('loadstart', () => loader.style.opacity = '1');
+            videoElement.addEventListener('playing', () => {
+                loader.style.opacity = '0';
+                hideAlert();
+            });
+            videoElement.addEventListener('waiting', () => loader.style.opacity = '1');
+            videoElement.addEventListener('pause', () => updatePlayButtonIcon(false));
+            videoElement.addEventListener('play', () => updatePlayButtonIcon(true));
+
+            // Native browser error recovery
+            videoElement.addEventListener('error', (e) => {
+                console.warn('Native video error encountered. Retrying...', e);
+                showAlert("Tasvir uzildi. Qayta ulanishga harakat qilinmoqda...");
+                setTimeout(() => {
+                    if (currentUrl) playChannel(activeChannel.id);
+                }, 2000);
+            });
+        }
+
+        function playChannel(id) {
+            const channel = channelsData.find(c => c.id === id);
+            if (!channel) return;
+
+            activeChannel = channel;
+            currentUrl = channel.url;
+
+            // UI updates
+            document.getElementById('active-title').innerText = channel.name;
+            document.getElementById('active-country-badge').innerText = channel.group.substring(0, 3).toUpperCase();
+            document.getElementById('active-url').innerText = channel.url;
+
+            // Target country flag & styling elements
+            const badge = document.getElementById('active-country-badge');
+            if (channel.group === "O'zbekiston") {
+                badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-950 text-emerald-300 ring-1 ring-emerald-500/20";
+            } else if (channel.group === "Tojikiston") {
+                badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-950 text-amber-300 ring-1 ring-amber-500/20";
+            } else {
+                badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-950 text-indigo-300 ring-1 ring-indigo-500/20";
+            }
+
+            // Love/Heart icon update for active channel
+            updateActiveHeartIconState();
+
+            // Destroy previous HLS instance if active
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+
+            loader.style.opacity = '1';
+            hideAlert();
+
+            // Initialize playback with Hls.js or Native HLS falling back
+            if (Hls.isSupported()) {
+                console.log("Loading stream with Hls.js: " + currentUrl);
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 60,
+                    maxBufferLength: 20,
+                    maxBufferSize: 30 * 1000 * 1000, // 30MB Max buffer capacity
+                    manifestLoadingMaxRetry: 5,
+                    levelLoadingMaxRetry: 5,
+                    fragLoadingMaxRetry: 6,
+                });
+                
+                hls.loadSource(currentUrl);
+                hls.attachMedia(videoElement);
+
+                // EXTREMELY ROBUST STREAM HEALING ENGINE
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        showAlert("Live efir oqimi uzildi. Hls-Media-Engine qayta yuklashni boshlamoqda...");
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log("Fatal network error. Retrying fragment loading.");
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log("Fatal media error. Recovering media.");
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.log("Unrecoverable error. Destroying and re-instancing after latency gap.");
+                                setTimeout(() => {
+                                    playChannel(id);
+                                }, 1500);
+                                break;
+                        }
+                    } else {
+                        // Non-fatal stream warning handling (buffer stall, warning logs etc)
+                        if (data.details === "bufferStalledError") {
+                            showAlert("Buferlash kechikmoqda... Internet aloqasini tekshiring.");
+                        }
+                    }
+                });
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    videoElement.play().catch(e => console.log("Auto-play blocked by client interaction request. Waiting target action."));
+                });
+
+            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                // For native playback on Safari and some hybrid renderers
+                console.log("Loading stream with native browser HLS capabilities");
+                videoElement.src = currentUrl;
+                videoElement.play().catch(e => console.log("Auto-play blocked natively. Waiting for tap."));
+            }
+
+            // Visual active list item highlighting
+            document.querySelectorAll('.channel-card-item').forEach(el => {
+                el.classList.remove('ring-2', 'ring-violet-500', 'bg-violet-900/10', 'border-violet-800/10');
+            });
+            const activeCard = document.getElementById(`card-${id}`);
+            if (activeCard) {
+                activeCard.classList.add('ring-2', 'ring-violet-500', 'bg-violet-900/10', 'border-violet-800/50');
+                activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // CONTROL OVERLAY ACTIONS
+        function togglePlay() {
+            if (videoElement.paused) {
+                videoElement.play();
+                updatePlayButtonIcon(true);
+            } else {
+                videoElement.pause();
+                updatePlayButtonIcon(false);
+            }
+        }
+
+        function updatePlayButtonIcon(playing) {
+            const icon = document.getElementById('control-play-icon');
+            if (playing) {
+                icon.innerHTML = `<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />`;
+            } else {
+                icon.innerHTML = `<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />`;
+            }
+        }
+
+        function toggleMute() {
+            videoElement.muted = !videoElement.muted;
+            const muteBtn = document.getElementById('control-mute');
+            if (videoElement.muted) {
+                muteBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                `;
+            } else {
+                muteBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                `;
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                videoElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen mode: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // RECOVERY WARNING ALERTS
+        function showAlert(text) {
+            alertBanner.classList.remove('hidden');
+            alertText.innerText = text;
+        }
+
+        function hideAlert() {
+            alertBanner.classList.add('hidden');
+        }
+
+        // GROUPS FILTER AND SEARCH SEARCH
+        function filterGroup(groupName) {
+            currentGroup = groupName;
+            
+            // Adjust visual tabs
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (groupName === 'all') document.getElementById('tab-all').classList.add('active');
+            else if (groupName === 'O\'zbekiston') document.getElementById('tab-uz').classList.add('active');
+            else if (groupName === 'Tojikiston') document.getElementById('tab-tj').classList.add('active');
+            else if (groupName === 'Rossiya') document.getElementById('tab-ru').classList.add('active');
+            else if (groupName === 'favorites') document.getElementById('tab-fav').classList.add('active');
+
+            renderChannels();
+        }
+
+        function handleSearch() {
+            const inputVal = document.getElementById('search-input').value;
+            currentSearchQuery = inputVal.trim().toLowerCase();
+            
+            const clearBtn = document.getElementById('clear-search');
+            if (currentSearchQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            renderChannels();
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = "";
+            currentSearchQuery = "";
+            document.getElementById('clear-search').add('hidden');
+            renderChannels();
+        }
+
+        // RENDER CHANNELS LIST IN INTERACTIVE MATRIX GRID
+        function renderChannels() {
+            const container = document.getElementById('channels-container');
+            container.innerHTML = "";
+
+            // Filter channels based on country and search string
+            const filtered = channelsData.filter(ch => {
+                const matchesGroup = (currentGroup === 'all') || 
+                                     (currentGroup === 'favorites' && favorites.includes(ch.id)) ||
+                                     (ch.group === currentGroup);
+                
+                const matchesSearch = ch.name.toLowerCase().includes(currentSearchQuery) || 
+                                      ch.group.toLowerCase().includes(currentSearchQuery);
+
+                return matchesGroup && matchesSearch;
+            });
+
+            // Update stats badge count
+            document.getElementById('filtered-channels-count').innerText = `${filtered.length} ta`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="py-12 text-center text-slate-500 text-sm flex flex-col items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19.428 15.428a2 2 0 11-1.022-.547l-2.387-2.387a6 6 0 10-2.3 2.3l2.387 2.387a2 2 0 011.022.547z" />
+                        </svg>
+                        <span>Hech qanday kanal topilmadi.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(ch => {
+                const isFav = favorites.includes(ch.id);
+                const isPlaying = activeChannel && activeChannel.id === ch.id;
+
+                const card = document.createElement('div');
+                card.id = `card-${ch.id}`;
+                card.className = `channel-card-item p-3.5 bg-cosmic-950/45 hover:bg-purple-950/20 border border-purple-950/20 rounded-2xl flex items-center justify-between gap-3 cursor-pointer transition-all ${isPlaying ? 'ring-2 ring-violet-500 bg-violet-900/10 border-violet-800/50' : ''}`;
+                card.onclick = (e) => {
+                    // Prevent trigger if clicking on the favorite star directly
+                    if (e.target.closest('.fav-btn-action')) return;
+                    playChannel(ch.id);
+                };
+
+                // Domain host identification to display on cards
+                let domain = "Oqim manbadi";
+                try {
+                    const host = new URL(ch.url).hostname;
+                    domain = host.replace("www.", "");
+                } catch(e) {}
+
+                // Flag visual mapping
+                const flagEmoji = ch.group === "O'zbekiston" ? "🇺🇿" : ch.group === "Tojikiston" ? "🇹🇯" : "🇷🇺";
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3 min-w-0">
+                        <!-- Custom CSS Character logo representation -->
+                        <div class="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-tr from-purple-950 to-indigo-950 ring-1 ring-purple-500/10 flex items-center justify-center text-lg shadow-inner">
+                            ${ch.logoChar || "🟢"}
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="text-sm font-bold truncate text-slate-100">${ch.name}</h4>
+                            <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                                <span class="px-1.5 py-0.5 rounded text-[10px] bg-cosmic-900 text-slate-400 border border-purple-950/30">
+                                    ${flagEmoji} ${ch.group}
+                                </span>
+                                <span class="text-[9px] text-slate-500 truncate max-w-40">
+                                    ${domain}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="fav-btn-action p-2 text-slate-500 hover:text-rose-500 transition-colors focus:outline-none" onclick="toggleChannelFav('${ch.id}', event)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ${isFav ? 'fill-rose-500 stroke-rose-500' : 'fill-none stroke-current'}" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // FAVORITE MANAGING SERVICE
+        function toggleChannelFav(id, event) {
+            if (event) event.stopPropagation();
+
+            const idx = favorites.indexOf(id);
+            if (idx === -1) {
+                favorites.push(id);
+            } else {
+                favorites.splice(idx, 1);
+            }
+
+            localStorage.setItem('uztv_favorites', JSON.stringify(favorites));
+            
+            // Re-render
+            renderChannels();
+            updateActiveHeartIconState();
+        }
+
+        function toggleActiveChannelFav() {
+            if (!activeChannel) return;
+            toggleChannelFav(activeChannel.id);
+        }
+
+        function updateActiveHeartIconState() {
+            const activeHeart = document.getElementById('active-heart-icon');
+            if (activeChannel && favorites.includes(activeChannel.id)) {
+                activeHeart.classList.remove('fill-none');
+                activeHeart.classList.add('fill-rose-500');
+            } else {
+                activeHeart.classList.remove('fill-rose-500');
+                activeHeart.classList.add('fill-none');
+            }
+        }
+    </script>
+</body>
+</html>
