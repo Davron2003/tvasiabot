@@ -1,4 +1,4 @@
-!doctype html>
+<!doctype html>
 <html lang="uz" class="dark">
   <head>
     <meta charset="UTF-8" />
@@ -446,133 +446,133 @@
       // 1. CHANNELS DATALIST FULLY HARDCODED IN THE ONLY MAIN ENTRY HTML
       const CHANNELS_DATABASE = [
         // O'zbekiston / Uzbekistan Channels
-        { id: "uz_biz_cinema", name: "BIZ Cinema (1080p)", group: "O'zbekiston", url: "https://fl.biztv.media/cinema_720_EMfSyXgoRdiIHgldXTZICucKTIeCKO/index.m3u8", logoChar: "🎬" },
-        { id: "uz_biz_music", name: "BIZ Music (1080p)", group: "O'zbekiston", url: "https://fl.biztv.media/music_720_QAKpGmVUjaPApCNjpsgBxrdqNihAkl/index.m3u8", logoChar: "🎵" },
-        { id: "uz_biz_tv", name: "BIZ TV (1080p)", group: "O'zbekiston", url: "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/index.m3u8", logoChar: "📺" },
-        { id: "uz_bolajon", name: "Bolajon (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1007/playlist.m3u8", logoChar: "👶" },
-        { id: "uz_dasturxon_tv", name: "Dasturxon TV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1206/tracks-v1a1/playlist.m3u8", logoChar: "🍽️" },
-        { id: "uz_dunyo_boylab", name: "Dunyo bo'ylab (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1006/tracks-v1a1/playlist.m3u8", logoChar: "🌍" },
-        { id: "uz_ftv", name: "FTV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1018/playlist.m3u8", logoChar: "🎸" },
-        { id: "uz_kinoteatr", name: "Kinoteatr (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1009/tracks-v1a1/playlist.m3u8", logoChar: "🎥" },
-        { id: "uz_madaniyat_va_marifat", name: "Madaniyat va ma'rifat (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1005/tracks-v1a1/playlist.m3u8", logoChar: "📚" },
-        { id: "uz_mahalla", name: "Mahalla (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1013/tracks-v1a1/playlist.m3u8", logoChar: "🏡" },
-        { id: "uz_milliy_1080p", name: "Milliy (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1014/tracks-v1a1/playlist.m3u8", logoChar: "🔱" },
-        { id: "uz_milliy_480p", name: "Milliy (480p)", group: "O'zbekiston", url: "https://milliy.tv/hls/index.m3u8", logoChar: "📺" },
-        { id: "uz_my5_hd", name: "MY5 (1080p)", group: "O'zbekiston", url: "https://st.my5.media/hls/hd/index.m3u8", logoChar: "🖐️" },
-        { id: "uz_my5_576p", name: "MY5 (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1217/tracks-v1a1/playlist.m3u8", logoChar: "🖐️" },
-        { id: "uz_navo", name: "Navo (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1008/tracks-v1a1/playlist.m3u8", logoChar: "🎻" },
-        { id: "uz_ozbekiston", name: "O'zbekiston (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1001/tracks-v1a1/playlist.m3u8", logoChar: "🇺🇿" },
-        { id: "uz_ozbekiston_24", name: "O'zbekiston 24 (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1011/tracks-v1a1/playlist.m3u8", logoChar: "🕒" },
-        { id: "uz_ozbekiston_tarixi", name: "O'zbekiston Tarixi (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1209/tracks-v1a1/playlist.m3u8", logoChar: "📜" },
-        { id: "uz_qaraqalpaqstan", name: "Qaraqalpaqstan (720p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1467/playlist.m3u8", logoChar: "🏜️" },
-        { id: "uz_renessans_tv", name: "Renessans TV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1221/tracks-v1a1/playlist.m3u8", logoChar: "🏛️" },
-        { id: "uz_sevimli_tv", name: "Sevimli TV (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1017/tracks-v1a1/playlist.m3u8", logoChar: "💖" },
-        { id: "uz_toshkent", name: "Toshkent (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1003/tracks-v1a1/playlist.m3u8", logoChar: "🏙️" },
-        { id: "uz_uzreport_tv", name: "UzReport TV (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1015/tracks-v1a1/playlist.m3u8", logoChar: "📊" },
-        { id: "uz_yoshlar", name: "Yoshlar (1080p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1002/tracks-v1a1/playlist.m3u8", logoChar: "✨" },
-        { id: "uz_zor_tv", name: "Zo'r TV (576p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1016/tracks-v1a1/mono.m3u8", logoChar: "👍" },
-        { id: "uz_makon_tv", name: "Makon TV (576i)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1497/tracks-v1a1/mono.m3u8", logoChar: "🛰️" },
-        { id: "uz_navoiy_tv", name: "Navoiy MTRK (576i)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1460/tracks-v1a1/mono.m3u8", logoChar: "🏞️" },
-        { id: "uz_buxoro_tv", name: "Buxoro MTRK (720p)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1459/tracks-v1a1/mono.m3u8", logoChar: "🕌" },
+        { id: "uz_biz_cinema", name: "BIZ Cinema", group: "O'zbekiston", url: "https://fl.biztv.media/cinema_720_EMfSyXgoRdiIHgldXTZICucKTIeCKO/index.m3u8", qualities: { "1080p": "https://fl.biztv.media/cinema_720_EMfSyXgoRdiIHgldXTZICucKTIeCKO/index.m3u8", "720p": "https://fl.biztv.media/cinema_720_EMfSyXgoRdiIHgldXTZICucKTIeCKO/index.m3u8", "576p": "https://stream8.cinerama.uz/1213/tracks-v1a1/mono.m3u8" }, logoChar: "🎬" },
+        { id: "uz_biz_music", name: "BIZ Music", group: "O'zbekiston", url: "https://fl.biztv.media/music_720_QAKpGmVUjaPApCNjpsgBxrdqNihAkl/index.m3u8", qualities: { "1080p": "https://fl.biztv.media/music_720_QAKpGmVUjaPApCNjpsgBxrdqNihAkl/index.m3u8", "720p": "https://fl.biztv.media/music_720_QAKpGmVUjaPApCNjpsgBxrdqNihAkl/index.m3u8", "576p": "https://stream8.cinerama.uz/1212/tracks-v1a1/mono.m3u8" }, logoChar: "🎵" },
+        { id: "uz_biz_tv", name: "BIZ TV", group: "O'zbekiston", url: "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/index.m3u8", qualities: { "1080p": "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/index.m3u8", "720p": "https://fl.biztv.media/biz_tv_720_uni8jhub4h8fub4idejswh8dh3j94finbu4nidj39inwsj92in3d/index.m3u8", "576p": "https://stream8.cinerama.uz/1211/tracks-v1a1/mono.m3u8" }, logoChar: "📺" },
+        { id: "uz_sport_tv", name: "Sport TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1004/tracks-v1a1/mono.m3u8", logoChar: "⚽" },
+        { id: "uz_futbol_tv", name: "Futbol TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1012/tracks-v1a1/mono.m3u8", logoChar: "🏆" },
+        { id: "uz_bolajon", name: "Bolajon", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1007/playlist.m3u8", logoChar: "👶" },
+        { id: "uz_dasturxon_tv", name: "Dasturxon TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1206/tracks-v1a1/playlist.m3u8", logoChar: "🍽️" },
+        { id: "uz_dunyo_boylab", name: "Dunyo bo'ylab", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1006/tracks-v1a1/playlist.m3u8", logoChar: "🌍" },
+        { id: "uz_ftv", name: "FTV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1018/playlist.m3u8", logoChar: "🎸" },
+        { id: "uz_kinoteatr", name: "Kinoteatr", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1009/tracks-v1a1/playlist.m3u8", logoChar: "🎥" },
+        { id: "uz_madaniyat_va_marifat", name: "Madaniyat va ma'rifat", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1005/tracks-v1a1/playlist.m3u8", logoChar: "📚" },
+        { id: "uz_mahalla", name: "Mahalla", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1013/tracks-v1a1/playlist.m3u8", logoChar: "🏡" },
+        { id: "uz_milliy", name: "Milliy TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1014/tracks-v1a1/playlist.m3u8", qualities: { "1080p": "https://stream8.cinerama.uz/1014/tracks-v1a1/playlist.m3u8", "720p": "https://stream8.cinerama.uz/1014/tracks-v1a1/playlist.m3u8", "576p": "http://milliy.tv/hls/index.m3u8" }, logoChar: "🔱" },
+        { id: "uz_my5", name: "MY5", group: "O'zbekiston", url: "https://st.my5.media/hls/hd/index.m3u8", qualities: { "1080p": "https://st.my5.media/hls/hd/index.m3u8", "720p": "https://st.my5.media/hls/hd/index.m3u8", "576p": "https://stream8.cinerama.uz/1217/tracks-v1a1/playlist.m3u8" }, logoChar: "🖐️" },
+        { id: "uz_navo", name: "Navo", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1008/tracks-v1a1/playlist.m3u8", logoChar: "🎻" },
+        { id: "uz_ozbekiston", name: "O'zbekiston", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1001/tracks-v1a1/playlist.m3u8", logoChar: "🇺🇿" },
+        { id: "uz_ozbekiston_24", name: "O'zbekiston 24", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1011/tracks-v1a1/playlist.m3u8", logoChar: "🕒" },
+        { id: "uz_ozbekiston_tarixi", name: "O'zbekiston Tarixi", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1209/tracks-v1a1/playlist.m3u8", logoChar: "📜" },
+        { id: "uz_qaraqalpaqstan", name: "Qaraqalpaqstan", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1467/playlist.m3u8", logoChar: "🏜️" },
+        { id: "uz_renessans_tv", name: "Renessans TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1221/tracks-v1a1/playlist.m3u8", logoChar: "🏛️" },
+        { id: "uz_sevimli_tv", name: "Sevimli TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1017/tracks-v1a1/playlist.m3u8", logoChar: "💖" },
+        { id: "uz_toshkent", name: "Toshkent", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1003/tracks-v1a1/playlist.m3u8", logoChar: "🏙️" },
+        { id: "uz_uzreport_tv", name: "UzReport TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1015/tracks-v1a1/playlist.m3u8", logoChar: "📊" },
+        { id: "uz_yoshlar", name: "Yoshlar", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1002/tracks-v1a1/playlist.m3u8", logoChar: "✨" },
+        { id: "uz_zor_tv", name: "Zo'r TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1016/tracks-v1a1/mono.m3u8", logoChar: "👍" },
+        { id: "uz_makon_tv", name: "Makon TV", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1497/tracks-v1a1/mono.m3u8", logoChar: "🛰️" },
+        { id: "uz_navoiy_tv", name: "Navoiy MTRK", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1460/tracks-v1a1/mono.m3u8", logoChar: "🏞️" },
+        { id: "uz_buxoro_tv", name: "Buxoro MTRK", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1459/tracks-v1a1/mono.m3u8", logoChar: "🕌" },
         { id: "uz_fargona_tv", name: "Farg'ona MTRK", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1458/tracks-v1a1/mono.m3u8", logoChar: "🏔️" },
-        { id: "uz_andijon_tv", name: "Andijon MTRK (576i)", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1457/tracks-v1a1/mono.m3u8", logoChar: "🏙️" },
+        { id: "uz_andijon_tv", name: "Andijon MTRK", group: "O'zbekiston", url: "https://stream8.cinerama.uz/1457/tracks-v1a1/mono.m3u8", logoChar: "🏙️" },
 
         // Tojikiston / Tajikistan Channels
-        { id: "tj_badakhshon", name: "Badakhshon (576p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/11/3m.m3u8", logoChar: "🏔️" },
-        { id: "tj_dushanbe_hd", name: "Dushanbe HD (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/7/3m.m3u8", logoChar: "🏙️" },
-        { id: "tj_futbol", name: "Futbol (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/8/3m.m3u8", logoChar: "⚽" },
-        { id: "tj_ilm_va_tabiat", name: "Ilm va Tabiat (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/15/3m.m3u8", logoChar: "🔬" },
-        { id: "tj_jahonnamo", name: "Jahonnamo (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/4/3m.m3u8", logoChar: "📰" },
-        { id: "tj_khatlon", name: "Khatlon (576p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/10/3m.m3u8", logoChar: "🏜️" },
-        { id: "tj_tajikistan", name: "Tajikistan (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/1/3m.m3u8", logoChar: "🇹🇯" },
-        { id: "tj_tmt", name: "TMT (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/9/3m.m3u8", logoChar: "⚡" },
-        { id: "tj_tv_bahoriston", name: "TV Bahoriston (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/3/3m.m3u8", logoChar: "🌸" },
-        { id: "tj_tv_kulob", name: "TV Kulob (576p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/12/3m.m3u8", logoChar: "🏛️" },
-        { id: "tj_tv_safina", name: "TV Safina (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/2/3m.m3u8", logoChar: "🛡️" },
-        { id: "tj_tv_sayohi", name: "TV Sayohi (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/16/3m.m3u8", logoChar: "🎒" },
-        { id: "tj_tv_sinamo", name: "TV Sinamo (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/6/3m.m3u8", logoChar: "🎥" },
-        { id: "tj_tv_sugd", name: "TV Sugd (1080p)", group: "Tojikiston", url: "https://live.teleradiocom.tj/14/3m.m3u8", logoChar: "🌾" },
+        { id: "tj_badakhshon", name: "Badakhshon", group: "Tojikiston", url: "https://live.teleradiocom.tj/11/3m.m3u8", logoChar: "🏔️" },
+        { id: "tj_dushanbe_hd", name: "Dushanbe HD", group: "Tojikiston", url: "https://live.teleradiocom.tj/7/3m.m3u8", logoChar: "🏙️" },
+        { id: "tj_futbol", name: "Futbol", group: "Tojikiston", url: "https://live.teleradiocom.tj/8/3m.m3u8", logoChar: "⚽" },
+        { id: "tj_ilm_va_tabiat", name: "Ilm va Tabiat", group: "Tojikiston", url: "https://live.teleradiocom.tj/15/3m.m3u8", logoChar: "🔬" },
+        { id: "tj_jahonnamo", name: "Jahonnamo", group: "Tojikiston", url: "https://live.teleradiocom.tj/4/3m.m3u8", logoChar: "📰" },
+        { id: "tj_khatlon", name: "Khatlon", group: "Tojikiston", url: "https://live.teleradiocom.tj/10/3m.m3u8", logoChar: "🏜️" },
+        { id: "tj_tajikistan", name: "Tajikistan", group: "Tojikiston", url: "https://live.teleradiocom.tj/1/3m.m3u8", logoChar: "🇹🇯" },
+        { id: "tj_tmt", name: "TMT", group: "Tojikiston", url: "https://live.teleradiocom.tj/9/3m.m3u8", logoChar: "⚡" },
+        { id: "tj_tv_bahoriston", name: "TV Bahoriston", group: "Tojikiston", url: "https://live.teleradiocom.tj/3/3m.m3u8", logoChar: "🌸" },
+        { id: "tj_tv_kulob", name: "TV Kulob", group: "Tojikiston", url: "https://live.teleradiocom.tj/12/3m.m3u8", logoChar: "🏛️" },
+        { id: "tj_tv_safina", name: "TV Safina", group: "Tojikiston", url: "https://live.teleradiocom.tj/2/3m.m3u8", logoChar: "🛡️" },
+        { id: "tj_tv_sayohi", name: "TV Sayohi", group: "Tojikiston", url: "https://live.teleradiocom.tj/16/3m.m3u8", logoChar: "🎒" },
+        { id: "tj_tv_sinamo", name: "TV Sinamo", group: "Tojikiston", url: "https://live.teleradiocom.tj/6/3m.m3u8", logoChar: "🎥" },
+        { id: "tj_tv_sugd", name: "TV Sugd", group: "Tojikiston", url: "https://live.teleradiocom.tj/14/3m.m3u8", logoChar: "🌾" },
 
         // Rossiya / Russia Channels
-        { id: "ru_15_music", name: "15+ Music (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/ce3366b1-bf25-4e24-96bb-1adf0d44bd3d.m3u8", logoChar: "🎸" },
-        { id: "ru_alpha_cinema", name: "alpha Cinema (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/b389173a-df4e-4171-8904-e249893e71eb.m3u8", logoChar: "🎬" },
-        { id: "ru_alpha_funny", name: "alpha Funny (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/90b76c71-a86e-488a-aac4-cb66d6f88781.m3u8", logoChar: "😷" },
-        { id: "ru_alpha_moretime", name: "alpha Moretime (1080p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/3546fc09-2eba-459d-9a1f-9a2fc39e50bd.m3u8", logoChar: "⏰" },
-        { id: "ru_nsc_plus", name: "NSC+ (720p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/5a03fc7a-8417-4874-b56f-91b8aeba1210.m3u8", logoChar: "🛰️" },
-        { id: "ru_novyi_russkii", name: "Новый Русский (720p)", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/f983b507-a170-41a9-85a9-d9afc6cba9c1.m3u8", logoChar: "🇷🇺" },
-        { id: "ru_12_kanal", name: "12 Канал (1080p)", group: "Rossiya", url: "https://12channel.bonus-tv.ru/cdn/12channel/playlist.m3u8", logoChar: "📺" },
-        { id: "ru_arirang", name: "Arirang (576p)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/arirang_edge/playlist.m3u8", logoChar: "🌸" },
-        { id: "ru_fon_music", name: "FON Music (1080p)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/tntmusic/playlist.m3u8", logoChar: "🎵" },
-        { id: "ru_leomax_24", name: "Leomax 24 (1080p)", group: "Rossiya", url: "https://tvshops.bonus-tv.ru/cdn/shop24/playlist.m3u8", logoChar: "🛍️" },
+        { id: "ru_15_music", name: "15+ Music", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/ce3366b1-bf25-4e24-96bb-1adf0d44bd3d.m3u8", logoChar: "🎸" },
+        { id: "ru_alpha_cinema", name: "alpha Cinema", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/b389173a-df4e-4171-8904-e249893e71eb.m3u8", logoChar: "🎬" },
+        { id: "ru_alpha_funny", name: "alpha Funny", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/90b76c71-a86e-488a-aac4-cb66d6f88781.m3u8", logoChar: "😷" },
+        { id: "ru_alpha_moretime", name: "alpha Moretime", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/3546fc09-2eba-459d-9a1f-9a2fc39e50bd.m3u8", logoChar: "⏰" },
+        { id: "ru_nsc_plus", name: "NSC+", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/5a03fc7a-8417-4874-b56f-91b8aeba1210.m3u8", logoChar: "🛰️" },
+        { id: "ru_novyi_russkii", name: "Новый Русский", group: "Rossiya", url: "https://live.15plusmg.ru/memfs/f983b507-a170-41a9-85a9-d9afc6cba9c1.m3u8", logoChar: "🇷🇺" },
+        { id: "ru_12_kanal", name: "12 Канал", group: "Rossiya", url: "https://12channel.bonus-tv.ru/cdn/12channel/playlist.m3u8", logoChar: "📺" },
+        { id: "ru_arirang", name: "Arirang", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/arirang_edge/playlist.m3u8", logoChar: "🌸" },
+        { id: "ru_fon_music", name: "FON Music", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/tntmusic/playlist.m3u8", logoChar: "🎵" },
+        { id: "ru_leomax_24", name: "Leomax 24", group: "Rossiya", url: "https://tvshops.bonus-tv.ru/cdn/shop24/playlist.m3u8", logoChar: "🛍️" },
         { id: "ru_rt_doc", name: "RTД (Документальный)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/rtdoc/playlist.m3u8", logoChar: "🎥" },
-        { id: "ru_arkhyz_24", name: "Архыз 24 (1080p)", group: "Rossiya", url: "https://live.mediacdn.ru/sr1/arhis24/playlist.m3u8", logoChar: "⛰️" },
-        { id: "ru_belros", name: "БелРос (576p)", group: "Rossiya", url: "https://live2.mediacdn.ru/sr1/tro/playlist.m3u8", logoChar: "📡" },
+        { id: "ru_arkhyz_24", name: "Архыз 24", group: "Rossiya", url: "https://live.mediacdn.ru/sr1/arhis24/playlist.m3u8", logoChar: "⛰️" },
+        { id: "ru_belros", name: "БелРос", group: "Rossiya", url: "https://live2.mediacdn.ru/sr1/tro/playlist.m3u8", logoChar: "📡" },
         { id: "ru_bst", name: "БСТ (Башкортостан)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/bst/playlist.m3u8", logoChar: "🏛" },
-        { id: "ru_dagestan", name: "Дагестан (1080p)", group: "Rossiya", url: "https://dagestan.mediacdn.ru/cdn/dagestan/playlist.m3u8", logoChar: "🌄" },
-        { id: "ru_don_24", name: "Дон 24 (1080p)", group: "Rossiya", url: "https://donmedia.bonus-tv.ru/cdn/donmedia/playlist.m3u8", logoChar: "🌊" },
-        { id: "ru_zvezda", name: "Звезда (1080p)", group: "Rossiya", url: "https://tvzvezda.bonus-tv.ru/cdn/tvzvezda/playlist.m3u8", logoChar: "⭐️" },
-        { id: "ru_zvezda_plus", name: "Звезда Плюс (1080p)", group: "Rossiya", url: "http://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/playlist.m3u8", logoChar: "✨" },
-        { id: "ru_ingushetia", name: "Ингушетия ТВ (1080p)", group: "Rossiya", url: "https://ingushetia.mediacdn.ru/cdn/ingushetia/playlist.m3u8", logoChar: "🏰" },
+        { id: "ru_dagestan", name: "Дагестан", group: "Rossiya", url: "https://dagestan.mediacdn.ru/cdn/dagestan/playlist.m3u8", logoChar: "🌄" },
+        { id: "ru_don_24", name: "Дон 24", group: "Rossiya", url: "https://donmedia.bonus-tv.ru/cdn/donmedia/playlist.m3u8", logoChar: "🌊" },
+        { id: "ru_zvezda", name: "Звезда", group: "Rossiya", url: "https://tvzvezda.bonus-tv.ru/cdn/tvzvezda/playlist.m3u8", logoChar: "⭐️" },
+        { id: "ru_zvezda_plus", name: "Звезда Плюс", group: "Rossiya", url: "http://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/playlist.m3u8", logoChar: "✨" },
+        { id: "ru_ingushetia", name: "Ингушетия ТВ", group: "Rossiya", url: "https://ingushetia.mediacdn.ru/cdn/ingushetia/playlist.m3u8", logoChar: "🏰" },
         { id: "ru_krik_tv", name: "КРИК-ТВ (Екатеринбург)", group: "Rossiya", url: "http://cdn-01.bonus-tv.ru/kriktv_edge/playlist.m3u8", logoChar: "💬" },
-        { id: "ru_kuraj_tv", name: "Курай (Уфа) (576p)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/kurai/playlist.m3u8", logoChar: "🎼" },
-        { id: "ru_magnat_tv", name: "Магнат ТВ (1080p)", group: "Rossiya", url: "https://s1.tv-nano.com/Magnat_HD_5119705/video.m3u8", logoChar: "🪙" },
-        { id: "ru_osetiya", name: "Осетия Ирыстон (1080p)", group: "Rossiya", url: "https://osir.mediacdn.ru/cdn/osetia/playlist.m3u8", logoChar: "🗻" },
+        { id: "ru_kuraj_tv", name: "Курай (Уфа)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/kurai/playlist.m3u8", logoChar: "🎼" },
+        { id: "ru_magnat_tv", name: "Магнат ТВ", group: "Rossiya", url: "https://s1.tv-nano.com/Magnat_HD_5119705/video.m3u8", logoChar: "🪙" },
+        { id: "ru_osetiya", name: "Осетия Ирыстон", group: "Rossiya", url: "https://osir.mediacdn.ru/cdn/osetia/playlist.m3u8", logoChar: "🗻" },
         { id: "ru_yaroslavl", name: "Первый Ярославский", group: "Rossiya", url: "https://yaroslavl.mediacdn.ru/cdn/pervyaroslavsk/playlist.m3u8", logoChar: "🏙️" },
-        { id: "ru_prodvizhenie", name: "Продвижение (576p)", group: "Rossiya", url: "https://prodvizhenie.bonus-tv.ru/cdn/prodvizhenie/playlist.m3u8", logoChar: "📈" },
-        { id: "ru_radost_moya", name: "Радость моя (576p)", group: "Rossiya", url: "https://radm.mediacdn.ru/cdn/radost/playlist.m3u8", logoChar: "☀️" },
-        { id: "ru_salyam", name: "Салям (Уфа) (576p)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/salyam/playlist.m3u8", logoChar: "🤝" },
+        { id: "ru_prodvizhenie", name: "Продвижение", group: "Rossiya", url: "https://prodvizhenie.bonus-tv.ru/cdn/prodvizhenie/playlist.m3u8", logoChar: "📈" },
+        { id: "ru_radost_moya", name: "Радость моя", group: "Rossiya", url: "https://radm.mediacdn.ru/cdn/radost/playlist.m3u8", logoChar: "☀️" },
+        { id: "ru_salyam", name: "Салям (Уфа)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/salyam/playlist.m3u8", logoChar: "🤝" },
         { id: "ru_svoyo_tv", name: "Своё ТВ (Ставрополь)", group: "Rossiya", url: "https://svoetv.mediacdn.ru/cdn/svoetv/playlist.m3u8", logoChar: "📺" },
         { id: "ru_start_triumf", name: "СТАРТ Триумф", group: "Rossiya", url: "https://bl.webcaster.pro/media/playlist/free_fe8dc1b768a84b8b0333db826471f17e_hd/33_85479982/1080p/8666c3e935faf6ef47ffd601e8e48868/4821408969.m3u8", logoChar: "🏆" },
         { id: "ru_strana_fm", name: "Страна ФМ", group: "Rossiya", url: "https://live-stranafm.cdnvideo.ru/stranafm/smil:stranafm.smil/playlist.m3u8", logoChar: "📻" },
-        { id: "ru_tamyr", name: "Тамыр (Уфа) (576p)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/tamyr/playlist.m3u8", logoChar: "🧸" },
+        { id: "ru_tamyr", name: "Тамыр (Уфа)", group: "Rossiya", url: "https://bsttv.bonus-tv.ru/cdn/tamyr/playlist.m3u8", logoChar: "🧸" },
         { id: "ru_krasnodar", name: "Телеканал Краснодар", group: "Rossiya", url: "https://krasnodar.mediacdn.ru/live/cdn/krasnodar/playlist.m3u8", logoChar: "🍏" },
         { id: "ru_tnv_planet", name: "ТНВ-Планета (Казань)", group: "Rossiya", url: "https://planeta.mediacdn.ru/cdn/tnvplanet/playlist.m3u8", logoChar: "🌍" },
         { id: "ru_shanson_tv", name: "Шансон ТВ", group: "Rossiya", url: "https://hls-shansontv.cdnvideo.ru/shansontv/smil:shansontv.smil/playlist.m3u8", logoChar: "🎸" },
         { id: "ru_shayan_tv", name: "Шаayan ТВ (Татарстан)", group: "Rossiya", url: "https://shayan.bonus-tv.ru/cdn/shayan/playlist.m3u8", logoChar: "👦" },
-        { id: "ru_u_tv", name: "Ю (720p)", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/u/playlist.m3u8", logoChar: "👜" },
-        { id: "ru_360_evacoder", name: "360° (1080p) HQ", group: "Rossiya", url: "https://cdn-evacoder-tv.facecast.io/evacoder_hls_hi/CkxfR1xNUAJwTgtXTBZTAJli/index.m3u8", logoChar: "📡" },
+        { id: "ru_u_tv", name: "Ю", group: "Rossiya", url: "https://cdn-01.bonus-tv.ru/u/playlist.m3u8", logoChar: "👜" },
+        { id: "ru_360_evacoder", name: "360°", group: "Rossiya", url: "https://cdn-evacoder-tv.facecast.io/evacoder_hls_hi/CkxfR1xNUAJwTgtXTBZTAJli/index.m3u8", logoChar: "📡" },
         { id: "ru_365_cinema", name: "Cinema Russia", group: "Rossiya", url: "https://catchup.videoline.ru/cinema/playlist.m3u8", logoChar: "🎥" },
         { id: "ru_dancehits80_denvs", name: "DanceHits80", group: "Rossiya", url: "https://dancehits80.denvs.ru:8080/index.m3u8", logoChar: "🕺" },
-        { id: "ru_dtr_music", name: "DTR Music 1 (720p)", group: "Rossiya", url: "https://kino-stream.online/hls/DTRMUSIC1.m3u8", logoChar: "🎧" },
+        { id: "ru_dtr_music", name: "DTR Music 1", group: "Rossiya", url: "https://kino-stream.online/hls/DTRMUSIC1.m3u8", logoChar: "🎧" },
         { id: "ru_dtr_zona1", name: "DTR Zona 1", group: "Rossiya", url: "https://kino-stream.online/hls/DTRZONA1.m3u8", logoChar: "🍿" },
         { id: "ru_dtr_zona2", name: "DTR Zona 2", group: "Rossiya", url: "https://kino-stream.online/hls/DTRZONA2.m3u8", logoChar: "🏰" },
         { id: "ru_kino_24", name: "Kino 24 HD", group: "Rossiya", url: "https://sirius.greenhosting.ru/Kino24Ru/video.m3u8", logoChar: "🎞️" },
         { id: "ru_pro100_tv", name: "Pro100TV", group: "Rossiya", url: "https://sirius.greenhosting.ru/Pro100tvRu/video.m3u8", logoChar: "⚡" },
         { id: "ru_sochi_live", name: "Sochi Live HD", group: "Rossiya", url: "https://serv30.vintera.tv:8081/sochi/sochi_stream/playlist.m3u8", logoChar: "🌴" },
         { id: "ru_song_tv", name: "SONGTV Russia", group: "Rossiya", url: "https://songtv.hls.iptvdc.com/web-russia/playlist.m3u8", logoChar: "🎶" },
-        { id: "ru_tsargrad", name: "Tsargrad TV (1080p)", group: "Rossiya", url: "https://bl.rutube.ru/livestream/91815da4edb167b5bd617bae490e57da/index.m3u8?e=2070278263&s=is_mLq_kjPYLsOJ4qj85tw&scheme=https", logoChar: "⛪" },
+        { id: "ru_tsargrad", name: "Tsargrad TV", group: "Rossiya", url: "https://bl.rutube.ru/livestream/91815da4edb167b5bd617bae490e57da/index.m3u8?e=2070278263&s=is_mLq_kjPYLsOJ4qj85tw&scheme=https", logoChar: "⛪" },
         { id: "ru_tv_pro_ch", name: "TV PRO Direct", group: "Rossiya", url: "https://rtmp.tvpro-online.ru/hls/ch1.m3u8", logoChar: "📽" },
         { id: "ru_univer_tv_1080", name: "Univer TV HD", group: "Rossiya", url: "https://cdn.universmotri.ru/live/smil:univer.smil/playlist.m3u8", logoChar: "🎓" },
-        { id: "ru_viva_ru", name: "VIVA Russia (1080p)", group: "Rossiya", url: "https://live20.bozztv.com/akamaissh101/ssh101/vivarussia/chunks.m3u8", logoChar: "🌟" },
-        { id: "ru_aist_tv_direct", name: "Аист ТВ (1080p)", group: "Rossiya", url: "https://live2-aisttv.cdnvideo.ru/aisttv2/aisttv.sdp/playlist.m3u8", logoChar: "🦩" },
+        { id: "ru_viva_ru", name: "VIVA Russia", group: "Rossiya", url: "https://live20.bozztv.com/akamaissh101/ssh101/vivarussia/chunks.m3u8", logoChar: "🌟" },
+        { id: "ru_aist_tv_direct", name: "Аист ТВ", group: "Rossiya", url: "https://live2-aisttv.cdnvideo.ru/aisttv2/aisttv.sdp/playlist.m3u8", logoChar: "🦩" },
         { id: "ru_astrahan_24_ch", name: "Астрахань 24", group: "Rossiya", url: "https://streaming.astrakhan.ru/astrakhan24/playlist.m3u8", logoChar: "🍉" },
         { id: "ru_belgorod_24_ch", name: "Белгород 24", group: "Rossiya", url: "https://belnovosti.cdn.easyhoster.ru:8443/stream.m3u8", logoChar: "🏢" },
         { id: "ru_big_asia_live", name: "Большая Азия", group: "Rossiya", url: "https://live-bigasia.cdnvideo.ru/bigasia/bigasia.smil/playlist.m3u8", logoChar: "🌏" },
         { id: "ru_vera_24_live", name: "Вера 24", group: "Rossiya", url: "https://5f05e059699ae.streamlock.net/WEB_Vera24/ngrp:Vera24.stream-adaptive/playlist.m3u8", logoChar: "🕊️" },
         { id: "ru_volga_hd_live", name: "Волга HD", group: "Rossiya", url: "https://tele2dvrnat01-02.cdnvideo.ru/stream/NAT_Volga/hls/1920x1080@4504/playlist.m3u8", logoChar: "⛵" },
-        { id: "ru_volgograd_24_hd", name: "Волгоград 24 (1080p)", group: "Rossiya", url: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8", logoChar: "🗽" },
+        { id: "ru_volgograd_24_hd", name: "Волгоград 24", group: "Rossiya", url: "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8", logoChar: "🗽" },
         { id: "ru_gubernia_samara_hd", name: "Губерния (Самара)", group: "Rossiya", url: "https://live.guberniatv.cdnvideo.ru/guberniatv/guberniatv.sdp/playlist.m3u8", logoChar: "🌾" },
         { id: "ru_eurasia_live", name: "Евразия (Орск)", group: "Rossiya", url: "https://infochh.trkeurasia.ru/hlsinfoch/infochhd.m3u8", logoChar: "🚂" },
-        { id: "ru_enisey_live", name: "Енисей (1080p)", group: "Rossiya", url: "https://hls-eniseytv.cdnvideo.ru/eniseytv/stream1/playlist.m3u8", logoChar: "🌲" },
-        { id: "ru_izvestia_live", name: "Известия (1080p)", group: "Rossiya", url: "https://igi-hls.cdnvideo.ru/igi/igi_tcode/playlist.m3u8", logoChar: "📰" },
+        { id: "ru_enisey_live", name: "Енисей", group: "Rossiya", url: "https://hls-eniseytv.cdnvideo.ru/eniseytv/stream1/playlist.m3u8", logoChar: "🌲" },
+        { id: "ru_izvestia_live", name: "Известия", group: "Rossiya", url: "https://igi-hls.cdnvideo.ru/igi/igi_tcode/playlist.m3u8", logoChar: "📰" },
         { id: "ru_kino_tv_direct", name: "КИНОТВ Live", group: "Rossiya", url: "https://vod.tuva.ru/kinotv/index.m3u8", logoChar: "🍿" },
         { id: "ru_crimea_24_live", name: "Крым 24", group: "Rossiya", url: "https://cdn.1tvcrimea.ru/24tvcrimea.m3u8", logoChar: "🏖️" },
         { id: "ru_ldpr_tv_live", name: "ЛДПР ТВ", group: "Rossiya", url: "https://46.46.143.222:1935/live/mp4:ldpr.stream/playlist.m3u8", logoChar: "🕊️" },
         { id: "ru_legendarnyy_ch", name: "Легендарный 24", group: "Rossiya", url: "https://sevas.1tvcrimea.ru/legendarniy24.m3u8", logoChar: "⚔️" },
-        { id: "ru_mir_1080", name: "Мир (1080p)", group: "Rossiya", url: "https://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mirtv_2500/playlist.m3u8", logoChar: "🌍" },
-        { id: "ru_mir_24_1080", name: "Мир 24 (1080p)", group: "Rossiya", url: "https://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/playlist.m3u8", logoChar: "🌏" },
-        { id: "ru_solnce_direct", name: "Солнце (576p)", group: "Rossiya", url: "https://tv.mediacdn.ru/live/solntse/playlist.m3u8", logoChar: "☀️" },
+        { id: "ru_mir_1080", name: "Мир", group: "Rossiya", url: "https://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mirtv_2500/playlist.m3u8", logoChar: "🌍" },
+        { id: "ru_mir_24_1080", name: "Мир 24", group: "Rossiya", url: "https://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/playlist.m3u8", logoChar: "🌏" },
+        { id: "ru_solnce_direct", name: "Солнце", group: "Rossiya", url: "https://tv.mediacdn.ru/live/solntse/playlist.m3u8", logoChar: "☀️" },
         { id: "ru_tvcentr_live", name: "ТВ Центр HD", group: "Rossiya", url: "https://tvc-hls.cdnvideo.ru/tvc-res/smil:vd9221.smil/playlist.m3u8", logoChar: "🏛️" },
         { id: "ru_tvoetv_hd_live", name: "Твое TV HD", group: "Rossiya", url: "https://tvoetv.space:8080/tvoetv/index.m3u8", logoChar: "🌟" },
         { id: "ru_rbk_live", name: "РБК ТВ", group: "Rossiya", url: "https://online-video.rbc.ru/online2/rbctv.m3u8", logoChar: "📊" },
         { id: "ru_russia_24", name: "Россия 24", group: "Rossiya", url: "https://uiptv.do.am/1ufc/000000006/playlist.m3u8", logoChar: "📺" },
         { id: "ru_tiji_direct", name: "TiJi Kids", group: "Rossiya", url: "https://stream8.cinerama.uz/1441/tracks-v1a1/mono.m3u8", logoChar: "🧸" },
         { id: "ru_gulli_girl", name: "Gulli Girl HD", group: "Rossiya", url: "https://stream8.cinerama.uz/1445/tracks-v1a1/mono.m3u8", logoChar: "🎀" },
-        { id: "ru_ntv_hd_live", name: "NTV HD (1080p)", group: "Rossiya", url: "https://bl.rutube.ru/livestream/c37cd74192c6bc3d6cd6077c0c4fd686/index.m3u8?s=HSWg81JrQ3OqmwuWkEIDAQ&e=2077050299&scheme=https", logoChar: "🖲️" },
-        { id: "ru_subbota_hd", name: "Subbota! HD", group: "Rossiya", url: "https://bl.rutube.ru/livestream/310744c10a5809da38aa445c952976da/index.m3u8?s=dmUf6BUQzDBTwtQOseAfog&e=2066519758&scheme=https", logoChar: "🎀" },
-        { id: "ru_u_tv_720", name: "U! TV 720p", group: "Rossiya", url: "https://bl.rutube.ru/livestream/5c9327074e25ca86f3111d4085cbbb65/index.m3u8?s=9cPc1rCGu6M932eqrifRhQ&e=2066519758&scheme=https", logoChar: "👚" },
-        { id: "ru_ru_tv", name: "RU.TV (1080p)", group: "Rossiya", url: "https://bl.rutube.ru/livestream/b1eb8e90d7e636677b3eb73b4fcbb717/index.m3u8?s=d-E-bxKy2v3EEJ94RQX9CA&e=2069285076&scheme=https", logoChar: "💖" },
-        { id: "ru_rtvi_live", name: "RTVi (450p)", group: "Rossiya", url: "https://s70378.cdn.ngenix.net/rtvi/index.m3u8", logoChar: "🎙️" }
+        { id: "ru_ntv_hd_live", name: "NTV HD", group: "Rossiya", url: "https://bl.rutube.ru/livestream/c37cd74192c6bc3d6cd6077c0c4fd686/index.m3u8?s=HSWg81JrQ3OqmwuWkEIDAQ&e=2077050299&scheme=https", logoChar: "🖲️" },
+        { id: "ru_subbota_hd", name: "Subbota!", group: "Rossiya", url: "https://bl.rutube.ru/livestream/310744c10a5809da38aa445c952976da/index.m3u8?s=dmUf6BUQzDBTwtQOseAfog&e=2066519758&scheme=https", logoChar: "🎀" },
+        { id: "ru_u_tv_720", name: "U! TV", group: "Rossiya", url: "https://bl.rutube.ru/livestream/5c9327074e25ca86f3111d4085cbbb65/index.m3u8?s=9cPc1rCGu6M932eqrifRhQ&e=2066519758&scheme=https", logoChar: "👚" },
+        { id: "ru_ru_tv", name: "RU.TV", group: "Rossiya", url: "https://bl.rutube.ru/livestream/b1eb8e90d7e636677b3eb73b4fcbb717/index.m3u8?s=d-E-bxKy2v3EEJ94RQX9CA&e=2069285076&scheme=https", logoChar: "💖" },
+        { id: "ru_rtvi_live", name: "RTVi", group: "Rossiya", url: "https://s70378.cdn.ngenix.net/rtvi/index.m3u8", logoChar: "🎙️" }
       ];
 
       // Local variables managing core player state
@@ -707,6 +707,15 @@
       });
 
 
+      // Helper function to resolve quality specific URLs
+      function getChannelUrl(channel, quality) {
+        if (!channel) return "";
+        if (channel.qualities && channel.qualities[quality]) {
+          return channel.qualities[quality];
+        }
+        return channel.url;
+      }
+
       // 3. SECURE ADAPTIVE PLAYBACK ENGINE COMPOSER with Buffer limit settings
       function startStreamingChannel() {
         if (!activeChannel) return;
@@ -756,10 +765,13 @@
         // Render visual filters to immediate player DOM to verify "xiralashish"
         applyQualityFiltersToVideoDOM();
 
+        // Resolve stream URL based on preferred quality setting
+        const resolvedUrl = getChannelUrl(activeChannel, currentQuality);
+
         // Check compatibility
         if (Hls.isSupported()) {
           hlsInstance = new Hls(hlsConfig);
-          hlsInstance.loadSource(activeChannel.url);
+          hlsInstance.loadSource(resolvedUrl);
           hlsInstance.attachMedia(videoElement);
 
           // Listeners to drive dynamic loaders
@@ -791,7 +803,7 @@
 
         } else if (videoElement.canPlayType("application/vnd.apple.mpegurl")) {
           // Native Safari / iOS environment
-          videoElement.src = activeChannel.url;
+          videoElement.src = resolvedUrl;
           videoElement.addEventListener("loadedmetadata", () => {
             videoElement.play().catch(() => {});
             videoLoader.classList.add("opacity-0");
@@ -952,38 +964,8 @@
             btn.className = "quality-tab-btn relative p-3.5 rounded-2xl flex flex-col items-center justify-center text-center transition-all border outline-none select-none cursor-pointer bg-white/20 text-white border-white/35 shadow-xl font-bold active:scale-95";
             btn.querySelector(".badge-dot").classList.remove("hidden");
 
-            // REAL-TIME ENGAGING FLUSHING & RECOVERY:
-            // Sifat o'zgargach, Hls.js buferini bir zumda tozalaymiz va video qaytadan
-            // silliqqina butunlay o'sha pasaytirilgan o'lchamga ulanadi va qotmaydi.
-            applyQualityFiltersToVideoDOM();
-            
-            if (hlsInstance) {
-              console.log("Interactive quality shifting to:", currentQuality);
-              // Clean buffer instantly
-              hlsInstance.trigger(Hls.Events.BUFFER_FLUSHING, { 
-                startOffset: videoElement.currentTime + 0.5, 
-                endOffset: Infinity, 
-                type: 'video' 
-              });
-              
-              // Flush configuration dynamically with fast recovery settings
-              if (currentQuality === "576p") {
-                hlsInstance.config.maxBufferLength = 3.5;
-                hlsInstance.config.maxMaxBufferLength = 6;
-                hlsInstance.config.maxBufferSize = 1.5 * 1024 * 1024;
-              } else if (currentQuality === "720p") {
-                hlsInstance.config.maxBufferLength = 8;
-                hlsInstance.config.maxMaxBufferLength = 15;
-                hlsInstance.config.maxBufferSize = 8 * 1024 * 1024;
-              } else {
-                hlsInstance.config.maxBufferLength = 30;
-                hlsInstance.config.maxMaxBufferLength = 60;
-                hlsInstance.config.maxBufferSize = 60 * 1024 * 1024;
-              }
-
-              // Apply multi adaptive bitrate index if source manifest supports it
-              configureAdaptiveLevelsForHlsEngine();
-            }
+            // Sifat o'zgargach, yangi havola va cheklovlar bilan ko'rsatuvni qayta yuklaymiz
+            startStreamingChannel();
 
             // Simple user display alert feedback
             const alertDeck = document.getElementById("system-alert-deck");
@@ -1194,3 +1176,4 @@
     </script>
   </body>
 </html>
+
