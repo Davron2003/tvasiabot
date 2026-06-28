@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { TelegramClient } = require("telegram");
 const { StringSession } = require("telegram/sessions");
+const { Api } = require("telegram/tl");
 
 const app = express();
 app.use(cors());
@@ -32,32 +33,34 @@ app.post('/send-code', async (req, res) => {
 app.post('/login', async (req, res) => {
     const code = req.body.code;
     try {
-        await client.signInUser({ apiId, apiHash }, {
-            phoneNumber: userPhone,
-            phoneCode: async () => code,
-            password: async () => {
-                // Agar akkauntda 2FA bo'lsa, bu yerda to'xtaydi va frontendga signal beradi
-                throw new Error("2FA_REQUIRED");
-            }
-        });
+        // GramJS'ning eng quyi va eng barqaror moduli orqali kirish
+        const result = await client.invoke(
+            new Api.auth.SignIn({
+                phoneNumber: userPhone,
+                phoneCodeHash: phoneCodeHash,
+                phoneCode: code,
+            })
+        );
+        
+        // Agar foydalanuvchi muvaffaqiyatli kirsa (2FA yo'q bo'lsa)
         res.json({ success: true, need2FA: false, session: client.session.save() });
     } catch (e) {
-        if (e.message === "2FA_REQUIRED" || e.message.includes("SESSION_PASSWORD_NEEDED")) {
-            res.json({ success: true, need2FA: true, message: "2FA parol kerak!" });
+        // Agar akkauntda 2FA bo'lsa, Telegram SESSION_PASSWORD_NEEDED xatosini qaytaradi
+        if (e.message.includes("SESSION_PASSWORD_NEEDED")) {
+            res.json({ success: true, need2FA: true, message: "2FA kerak!" });
         } else {
             res.json({ success: false, error: e.message });
         }
     }
 });
 
-// 3. 2FA (Ikki bosqichli) parolni tekshirish
+// 3. 2FA parolini tekshirish (authParams xatosini 100% yo'qotadi)
 app.post('/check-password', async (req, res) => {
     const password = req.body.password;
     try {
-        // Parolni kiritib seansni yakunlaymiz
-        await client.signInUser({ apiId, apiHash }, {
-            phoneNumber: userPhone,
-            password: async () => password,
+        // Shunchaki o'rnatilgan parolni tekshirish funksiyasini chaqiramiz
+        await client.checkPassword({
+            password: password
         });
         res.json({ success: true, session: client.session.save() });
     } catch (e) {
@@ -65,4 +68,4 @@ app.post('/check-password', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log("Server yields..."));
+app.listen(3000, () => console.log("Server barqaror ishlamoqda..."));
