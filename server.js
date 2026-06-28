@@ -72,5 +72,47 @@ app.post('/check-password', async (req, res) => {
         res.json({ success: false, error: e.message });
     }
 });
+// ... (eski kodlar, ulanishlar va login qismlari o'z joyida qoladi)
 
+// 4. Chatlar ro'yxatini olish (Maksimum 20 ta eng oxirgi chat)
+app.post('/get-chats', async (req, res) => {
+    const sessionStr = req.body.session;
+    try {
+        // Telefonda saqlangan seans kaliti bilan yangi mijoz yaratamiz
+        const userSession = new StringSession(sessionStr);
+        const userClient = new TelegramClient(userSession, apiId, apiHash, { connectionRetries: 3 });
+        
+        await userClient.connect();
+        
+        // Telegramdan oxirgi chatlar ro'yxatini yuklash
+        const dialogs = await userClient.getDialogs({ limit: 20 });
+        
+        const chatList = dialogs.map(dialog => {
+            let lastMessage = "Xabar yo'q";
+            if (dialog.message) {
+                lastMessage = dialog.message.message || "[Media xabar]";
+            }
+            
+            // Onlayn holatini aniqlash
+            let status = "kecha";
+            if (dialog.entity && dialog.entity.status) {
+                if (dialog.entity.status.className === "UserStatusOnline") status = "online";
+            }
+
+            return {
+                id: dialog.id.toString(),
+                title: dialog.title || "Yashirin suhbat",
+                unreadCount: dialog.unreadCount || 0,
+                lastMessage: lastMessage.substring(0, 45) + (lastMessage.length > 45 ? "..." : ""),
+                status: status
+            };
+        });
+
+        res.json({ success: true, chats: chatList });
+    } catch (e) {
+        res.json({ success: false, error: e.message });
+    }
+});
+
+app.listen(3000, () => console.log("Server yields..."));
 app.listen(3000, () => console.log("Server uzilishlarsiz ishlamoqda..."));
